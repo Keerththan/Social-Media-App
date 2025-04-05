@@ -1,15 +1,19 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 
-const Post = () => {
+const Post = ({post}) => {
 
     const {id} = useParams()
   return (
-    <div>
-      <br></br>
-       Post {id}
-      
-    </div>
+    <article className="Post">
+  <h2 >{post.title}</h2>
+  <p className="postDate">{post.datetime}</p>
+  <p className="postBody">{post.body}  </p>
+
+
+
+    </article>
+    
   )
 }
 

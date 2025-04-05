@@ -10,6 +10,9 @@ import PostPage from './PostPage'
 import Post from './Post'
 import { Routes,Route,Link} from 'react-router-dom'
 import PostLayout from './PostLayout'
+import { useState } from 'react'
+import { format } from 'date-fns'
+import { useEffect } from 'react'
 
 
 
@@ -17,34 +20,97 @@ import PostLayout from './PostLayout'
 
 
 function App() {
+  const [posts, setPosts] = useState([
+    {
+      id: 1,
+      title: "My First Post",
+      datetime: "July 01, 2021 11:17:36 AM",
+      body: "Lorem ipsum dolor sit amet consectetur adipisicing elit. "
+    },
+    {
+      id: 2,
+      title: "My 2nd Post",
+      datetime: "July 01, 2021 11:17:36 AM",
+      body: "Lorem ipsum dolor sit amet consectetur adipisicing elit."
+    },
+    {
+      id: 3,
+      title: "My 3rd Post",
+      datetime: "July 01, 2021 11:17:36 AM",
+      body: "Lorem ipsum dolor sit amet consectetur adipisicing elit."
+    },
+    {
+      id: 4,
+      title: "My Fourth Post",
+      datetime: "July 01, 2021 11:17:36 AM",
+      body: "Lorem ipsum dolor sit amet consectetur adipisicing"
+    }
+  ])
+  
+  const [search,setSearch]=useState('')
+  const [searchResults,setSearchResults]=useState([])
+  const [postTitle, setPostTitle] = useState('')
+  const [postBody, setPostBody] = useState('')
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const id = posts.length ? posts[posts.length - 1].id + 1 : 1;
+    const datetime = format(new Date(), 'MMMM dd, yyyy pp');
+    const newPost = { id, title: postTitle, datetime, body: postBody };
+    const allPosts = [...posts, newPost];
+    setPosts(allPosts);
+    setPostTitle('');
+    setPostBody('');
+   
+  }
+  
+  useEffect(() => {
+    const filteredResults = posts.filter((post) =>
+      ((post.body).toLowerCase()).includes(search.toLowerCase())
+      || ((post.title).toLowerCase()).includes(search.toLowerCase()));
+
+    setSearchResults(filteredResults.reverse());
+  }, [posts, search])
+
   return (
     <div className="App">
-      <nav>
-        <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/about">About</Link></li>
-          <li><Link to="/newpost">NewPost</Link></li>
-          <li><Link to="/postpage">PostPage</Link></li>
 
-        </ul>
-      </nav>
+        
+      <Header title="PK Social Media"/>
+      <Nav 
+       search={search}
+       setSearch={setSearch}
+
+       />
+      
+      
       <Routes>
-        <Route path="/"  element={<Home/>}/>
-        <Route path="/about"  element={<About/>}/>
-        <Route path="/header"  element={<Header/>}/>
-        <Route path="/nav"  element={<Nav/>}/>
-        <Route path="/newpost"  element={<NewPost/>}/>
-        
-        <Route path="/postpage"  element={<PostLayout/>}>
-            <Route index element={<PostPage/>}/>
-            <Route path=":id"  element={<Post/>}/>
-        </Route>
-        
-        <Route path="/missing"  element={<Missing/>}/>
-        <Route path="/footer"  element={<Footer/>}/>
-        <Route path="*" element={<Missing/>}/>
+      
+      <Route path="/" element={<Home posts={searchResults}/>}/>
+      <Route path="/post" element={ <NewPost
+        postTitle={postTitle}
+        setPostTitle={setPostTitle}
+        postBody={postBody}
+        setPostBody={setPostBody} 
+        handleSubmit={handleSubmit}
+      
+      />}/>
 
+      <Route path="/about" element={<About/>} />
+      <Route path="*" element={<Missing/>} />
+
+      
+  
+      
       </Routes>
+      <Footer/>  
+  
+     
+
+
+      
+      
+
      
     </div>
   )
