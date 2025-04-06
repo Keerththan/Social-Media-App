@@ -8,9 +8,9 @@ import Nav from './Nav'
 import NewPost from './NewPost'
 import PostPage from './PostPage'
 import Post from './Post'
-import { Routes,Route,Link} from 'react-router-dom'
+import { Routes,Route,Link, useNavigate} from 'react-router-dom'
 import PostLayout from './PostLayout'
-import { useState } from 'react'
+import { use, useState } from 'react'
 import { format } from 'date-fns'
 import { useEffect } from 'react'
 
@@ -51,6 +51,7 @@ function App() {
   const [searchResults,setSearchResults]=useState([])
   const [postTitle, setPostTitle] = useState('')
   const [postBody, setPostBody] = useState('')
+  const navigate=useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -61,6 +62,7 @@ function App() {
     setPosts(allPosts);
     setPostTitle('');
     setPostBody('');
+    navigate('/');
    
   }
   
@@ -71,6 +73,13 @@ function App() {
 
     setSearchResults(filteredResults.reverse());
   }, [posts, search])
+
+  const handleDelate = (id) => {
+    const postsList = posts.filter(post => post.id !== id);
+    setPosts(postsList);
+    navigate('/');
+    
+  }
 
   return (
     <div className="App">
@@ -87,7 +96,8 @@ function App() {
       <Routes>
       
       <Route path="/" element={<Home posts={searchResults}/>}/>
-      <Route path="/post" element={ <NewPost
+      <Route path="/post">
+      <Route index element={ <NewPost
         postTitle={postTitle}
         setPostTitle={setPostTitle}
         postBody={postBody}
@@ -95,6 +105,10 @@ function App() {
         handleSubmit={handleSubmit}
       
       />}/>
+      <Route path=":id" element={<PostPage posts={posts} handleDelete={handleDelate}/>}/>
+ 
+     
+      </Route>
 
       <Route path="/about" element={<About/>} />
       <Route path="*" element={<Missing/>} />
