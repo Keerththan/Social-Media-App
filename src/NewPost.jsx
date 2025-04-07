@@ -1,6 +1,7 @@
 const NewPost = ({
   handleSubmit, postTitle, setPostTitle, postBody, setPostBody
 }) => {
+    
   return (
       <main className="NewPost">
           <h2>New Post</h2>

@@ -2,6 +2,7 @@ import React from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 const Post = ({post}) => {
+  
 
     const {id} = useParams()
   return (

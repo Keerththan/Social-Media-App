@@ -3,7 +3,8 @@ import { useParams } from 'react-router-dom'
 
 
 const EditPost = ({posts,handleEdit,editTitle,setEditTitle,editBody,setEditBody}) => {
-    const {id} = useParams()
+  const {} = useContext(DataContext)
+  const {id} = useParams()
     const post = posts.find(post => (post.id).toString() === id);
    
     useEffect(() => {
